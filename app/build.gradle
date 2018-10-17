@@ -25,4 +25,13 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+
+    // Musste Excludes anfügen, da Error: Program type already present: android.support.v4.app.ActivityCompat$OnRequestPermissionsResultCallback
+    // Lösung aus: https://stackoverflow.com/questions/49837344/program-type-already-present-android-support-v4-app-backstackrecord/49837806
+    implementation ('com.journeyapps:zxing-android-embedded:3.4.0') {
+        exclude group: 'com.android.support'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
 }
