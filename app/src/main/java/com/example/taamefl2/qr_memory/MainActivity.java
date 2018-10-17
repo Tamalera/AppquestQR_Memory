@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
         integrator.setOrientationLocked(false);
         integrator.addExtra(Intents.Scan.BARCODE_IMAGE_ENABLED, true);
+        integrator.setBeepEnabled(false);
         integrator.initiateScan();
     }
 
