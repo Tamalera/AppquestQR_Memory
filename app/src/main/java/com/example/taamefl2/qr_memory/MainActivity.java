@@ -1,5 +1,6 @@
 package com.example.taamefl2.qr_memory;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap bild;
     private String loesungsWort;
 
+    final Context context = this;
+    private LogBuch logging = new LogBuch();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,18 @@ public class MainActivity extends AppCompatActivity {
                 qrCodeBildMachen();
                 bildAnzeigen.setImageBitmap(bild);
                 textAnzeigen.setText(loesungsWort);
+            }
+        });
+
+        final Button logBuchButton = findViewById(R.id.inLogBuchEintragen);
+
+        logBuchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //@FIXME: using testData
+                boolean logbookInstalled = logging.checkIfLogbookInstalled(context);
+                if (logbookInstalled) {
+                    logging.passDataToLogbook(context, dummyTestDataForLogBuch());
+                }
             }
         });
     }
@@ -74,5 +90,9 @@ public class MainActivity extends AppCompatActivity {
     private String codeAusgeben(String code){
         return code;
     }
-}
 
+    //@FIXME: this is testing data for logbook
+    private String [][] dummyTestDataForLogBuch(){
+        return new String[][]{ new String[]{"Test", "Testing"}, new String[]{"Wort1", "AnderesWort"}};
+    }
+}
