@@ -24,7 +24,22 @@
             android:id="@+id/textAnzeigen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="..."/>
+            android:text="HERE COME ALL PICS"/>
+
+
+        <EditText
+            android:id="@+id/loesungsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lösungen einfüllen"
+            android:id="@+id/arrayFuellen"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

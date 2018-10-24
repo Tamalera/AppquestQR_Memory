@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap bild;
     private String loesungsWort;
+
+    // Fill solution to array
+    private String[][] loesungsArray = new String[25][25]; //@fixme: better to use arraylist or even different solution
+    private String[] wortPaar = new String[2];
+    private int fuellIndex = 0;
+    private int counter = 0;
 
     final Context context = this;
     private LogBuch logging = new LogBuch();
@@ -39,14 +46,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final EditText loesungsText = findViewById(R.id.loesungsText);
+
+        final Button loesungArrayErstellen = findViewById(R.id.arrayFuellen);
+        loesungArrayErstellen.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                loesungSpeichern(loesungsText.getText().toString());
+                loesungsText.setText("");
+            }
+        });
+
         final Button logBuchButton = findViewById(R.id.inLogBuchEintragen);
 
         logBuchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //@FIXME: using testData
                 boolean logbookInstalled = logging.checkIfLogbookInstalled(context);
                 if (logbookInstalled) {
-                    logging.passDataToLogbook(context, dummyTestDataForLogBuch());
+                    //@todo: get rid of all null-null pairs in loesungsArray
+                    // or @fixme: work with arraylist
+                    logging.passDataToLogbook(context, loesungsArray);
                 }
             }
         });
@@ -91,8 +109,15 @@ public class MainActivity extends AppCompatActivity {
         return code;
     }
 
-    //@FIXME: this is testing data for logbook
-    private String [][] dummyTestDataForLogBuch(){
-        return new String[][]{ new String[]{"Test", "Testing"}, new String[]{"Wort1", "AnderesWort"}};
+    private void loesungSpeichern(String loesung){
+        if (counter == 0){
+            wortPaar[0] = loesung;
+            counter++;
+        }
+        if (counter == 1){
+            wortPaar[1] = loesung;
+            loesungsArray[fuellIndex] = wortPaar;
+            fuellIndex++;
+        }
     }
 }
