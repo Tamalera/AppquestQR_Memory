@@ -6,14 +6,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.integration.android.IntentIntegrator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,18 +25,32 @@ public class MainActivity extends AppCompatActivity {
     private String loesungsWort;
 
     // Fill solution to array
-    private String[][] loesungsArray = new String[25][25]; //@fixme: better to use arraylist or even different solution
+    private List<String[]> loesungsListe = new ArrayList<>();
     private String[] wortPaar = new String[2];
-    private int fuellIndex = 0;
     private int counter = 0;
 
     final Context context = this;
     private LogBuch logging = new LogBuch();
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    static List<String> imagePaths = new ArrayList<>();
+    static List<String> textStrings = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new MyAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+
+        //-------------------------------------------------------------------
 
         final Button fotoAufnehmenButton = findViewById(R.id.fotoAufnehmen);
         final ImageView bildAnzeigen = findViewById(R.id.fotoAnzeigen);
@@ -62,9 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean logbookInstalled = logging.checkIfLogbookInstalled(context);
                 if (logbookInstalled) {
-                    //@todo: get rid of all null-null pairs in loesungsArray
-                    // or @fixme: work with arraylist
-                    logging.passDataToLogbook(context, loesungsArray);
+                    logging.passDataToLogbook(context, loesungsListe);
                 }
             }
         });
@@ -89,15 +105,14 @@ public class MainActivity extends AppCompatActivity {
             String path = extras.getString(
                     Intents.Scan.RESULT_BARCODE_IMAGE_PATH);
 
-            bild  = bitmapAusgeben(path);
-
-            // Ein Bitmap zur Darstellung erhalten wir so:
-            // Bitmap bmp = BitmapFactory.decodeFile(path)
-
             String code = extras.getString(
                     Intents.Scan.RESULT);
 
-            loesungsWort  = codeAusgeben(code);
+            imagePaths.add(path);
+            textStrings.add(code);
+
+            bild  = bitmapAusgeben(path);
+            loesungsWort = codeAusgeben(code);
         }
     }
 
@@ -105,9 +120,7 @@ public class MainActivity extends AppCompatActivity {
         return BitmapFactory.decodeFile(path);
     }
 
-    private String codeAusgeben(String code){
-        return code;
-    }
+    private String codeAusgeben(String code){ return code; }
 
     private void loesungSpeichern(String loesung){
         if (counter == 0){
@@ -116,8 +129,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (counter == 1){
             wortPaar[1] = loesung;
-            loesungsArray[fuellIndex] = wortPaar;
-            fuellIndex++;
+            loesungsListe.add(wortPaar);
         }
     }
 }

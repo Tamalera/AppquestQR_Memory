@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Arrays;
+import java.util.List;
 
 public class LogBuch {
 
@@ -26,7 +25,7 @@ public class LogBuch {
     }
 
     // Passes JSON object with solution info to logbook app
-    public void passDataToLogbook(Context context, String[][] solution) {
+    public void passDataToLogbook(Context context, List<String[]> solution) {
         JSONObject solutionJSON = new JSONObject();
         JSONArray solutionJSONArray = new JSONArray(Arrays.asList(solution));
         try {
