@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] wortPaar = new String[2];
     private int counter = 0;
 
-    final Context context = this;
+    Context context = this;
     private LogBuch logging = new LogBuch();
 
     private RecyclerView mRecyclerView;
@@ -54,23 +55,23 @@ public class MainActivity extends AppCompatActivity {
 
         final Button fotoAufnehmenButton = findViewById(R.id.fotoAufnehmen);
         final ImageView bildAnzeigen = findViewById(R.id.fotoAnzeigen);
-        final TextView textAnzeigen = findViewById(R.id.textAnzeigen);
 
         fotoAufnehmenButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 qrCodeBildMachen();
                 bildAnzeigen.setImageBitmap(bild);
-                textAnzeigen.setText(loesungsWort);
             }
         });
 
         final EditText loesungsText = findViewById(R.id.loesungsText);
+        final EditText loesungsText2 = findViewById(R.id.loesungsText2);
 
         final Button loesungArrayErstellen = findViewById(R.id.arrayFuellen);
-        loesungArrayErstellen.setOnClickListener(new View.OnClickListener() {
+                loesungArrayErstellen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                loesungSpeichern(loesungsText.getText().toString());
+                loesungSpeichern(loesungsText.getText().toString(), loesungsText2.getText().toString());
                 loesungsText.setText("");
+                loesungsText2.setText("");
             }
         });
 
@@ -108,11 +109,14 @@ public class MainActivity extends AppCompatActivity {
             String code = extras.getString(
                     Intents.Scan.RESULT);
 
-            imagePaths.add(path);
-            textStrings.add(code);
-
             bild  = bitmapAusgeben(path);
             loesungsWort = codeAusgeben(code);
+
+            imagePaths.add(path);
+            textStrings.add(loesungsWort);
+
+            finish();
+            startActivity(getIntent());
         }
     }
 
@@ -122,14 +126,10 @@ public class MainActivity extends AppCompatActivity {
 
     private String codeAusgeben(String code){ return code; }
 
-    private void loesungSpeichern(String loesung){
-        if (counter == 0){
-            wortPaar[0] = loesung;
-            counter++;
-        }
-        if (counter == 1){
-            wortPaar[1] = loesung;
-            loesungsListe.add(wortPaar);
-        }
+    private void loesungSpeichern(String loesung, String loesung2){
+       wortPaar = new String[2];
+       wortPaar[0] = loesung;
+       wortPaar[1] = loesung2;
+       loesungsListe.add(wortPaar);
     }
 }

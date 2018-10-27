@@ -27,9 +27,9 @@ public class LogBuch {
     // Passes JSON object with solution info to logbook app
     public void passDataToLogbook(Context context, List<String[]> solution) {
         JSONObject solutionJSON = new JSONObject();
-        JSONArray solutionJSONArray = new JSONArray(Arrays.asList(solution));
+        JSONArray solutionJSONArray = new JSONArray(solution);
         try {
-            solutionJSON.put("task", "Dechiffrierer");
+            solutionJSON.put("task", "Memory");
             solutionJSON.put("solution", solutionJSONArray);
         } catch (JSONException e) {
             e.printStackTrace();
